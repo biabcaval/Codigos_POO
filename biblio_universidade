@@ -1,0 +1,126 @@
+#include <iostream>
+#include <string.h>
+#include <vector>
+
+using std::vector;
+using std::string;
+using std::cout;
+using std::cin;
+using std::endl;
+using std::ostream;
+
+// abstrata
+class Usuario{
+  string nome;
+  int idade;
+public:
+  Usuario(string n, int i){
+    nome = n;
+    idade = i;
+  }
+
+  //método destrutor
+  virtual ~Usuario(){}
+
+  string getNome(){return nome;}
+
+// func abstrata pra exibir os detalhes do user
+  virtual void exibir_detalhes() const = 0;
+// func amiga para acessar nome e idade para exibi-los
+  friend ostream& operator<<(ostream& os, const Usuario& a){
+  os << "Nome: " << a.nome << "\nIdade: " << a.idade << endl;
+  return os;
+}
+// func abstrata para retornar o tipo do usuario
+  virtual string tipo_usuario() const = 0;
+
+};
+
+
+class Estudante:public Usuario{
+  string matricula;
+  string curso;
+
+public:
+  // método construtor
+  Estudante(const string& n, const int& i, const string& m, const string& c):Usuario(n,i), matricula(m), curso(c){}
+
+// exibe informações específicas do estudante
+  void exibir_detalhes() const override {
+    cout << "Tipo de usuário: Estudante\n";
+    cout << this << "\nMatrícula: "<< matricula << "\nCurso: "<< curso <<endl;
+  }
+// retorna o tipo estudante
+  string tipo_usuario() const override{
+    return "Estudante";
+  }
+
+
+// Sobrecarga de operador especifica pra estudante
+  friend ostream& operator<<(ostream& os, const Estudante& e){
+  os << "Tipo de usuário: " << e.tipo_usuario() << "\n" << static_cast<const Usuario&>(e)<< "\nMatrícula: " << e.matricula << "\nCurso: " << e.curso;
+  return os;
+
+}
+
+};
+
+class Professor: public Usuario{
+    string departamento;
+public:
+// método construtor
+    Professor(const string& n, const int& i, const string& d) : Usuario(n,i), departamento(d) {}
+
+    void exibir_detalhes() const override {
+      cout << "Tipo de usuário: Professor\n";
+      cout << "Departamento" << this->departamento << endl;
+    }
+
+    // retorna o tipo professor
+    string tipo_usuario() const override{
+      return "Professor";
+  }
+
+// Sobrecarga de operador especifica pra professor
+  friend ostream& operator<<(ostream& os, const Professor& p){
+  os << "Tipo de usuário: " << p.tipo_usuario() << "\n" << static_cast<const Usuario&>(p)<< "\nDepartamento: " << p.departamento;
+  return os;}
+
+};
+    
+class Material{
+string titulo;
+
+public:
+    Material(string t){titulo = t;} // método construtor
+    virtual ~Material(){} // método destrutor
+
+
+    virtual void exibir_detalhes() = 0;
+
+    friend ostream& operator<<(ostream& os, const Material& m){
+      os << "Titulo: " << m.titulo << endl;
+      return os;}
+
+};
+
+class Livro : public Material{
+    string autor;
+    int ano_publi;
+public:
+    Livro(string t, string a, int an):Material(t),autor(a),ano_publi(an){}; }
+    
+
+class Revista{};
+
+class Emprestimo{};
+
+class Biblioteca{};
+
+
+
+int main() {
+  std::cout << "Hello World!\n";
+
+  return 0;
+}
